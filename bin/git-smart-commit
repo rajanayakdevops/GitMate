@@ -4,7 +4,7 @@ const { execSync } = require("child_process");
 const readline = require("readline");
 
 // Function to execute shell commands and return output
-function runLocalCommand(command) {
+function runCommand(command) {
     try {
         return execSync(command, { encoding: "utf-8" }).trim();
     } catch (error) {
