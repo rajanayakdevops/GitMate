@@ -4,11 +4,14 @@
   "description": "GitMate is a powerful Git extension designed to enhance your Git workflow with intelligent automation, improved commit management, and additional productivity features.",
   "main": "index.js",
   "bin": {
-    "git-smart-commit": "./bin/git-smart-commit"
+    "git-smart-commit": "bin/git-smart-commit"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "license": "Apache-2.0"
+  "license": "Apache-2.0",
+  "author": {
+    "name": "Raja Nayak"
+  }
 }
