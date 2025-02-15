@@ -1,0 +1,55 @@
+#!/usr/bin/env node
+
+const { execSync } = require("child_process");
+const readline = require("readline");
+
+// Function to execute shell commands and return output
+function runLocalCommand(command) {
+    try {
+        return execSync(command, { encoding: "utf-8" }).trim();
+    } catch (error) {
+        return "";
+    }
+}
+
+// Check if there are staged changes
+const stagedChanges = runCommand("git diff --staged --name-only");
+if (!stagedChanges) {
+    console.log("No staged changes found. Please stage your changes using 'git add'.");
+    process.exit(1);
+}
+
+// Generate a simple commit message based on changed files
+const files = stagedChanges.split("\n");
+const message = `Updated ${files.length} file(s): ${files.join(", ")}`;
+
+// Ask for user confirmation
+const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+});
+
+rl.question(`Suggested Commit Message: "${message}"\nUse this message? (Y/N/Edit): `, (answer) => {
+    let finalMessage = message;
+
+    if (answer.toLowerCase() === "n") {
+        console.log("Commit canceled.");
+        rl.close();
+        process.exit(0);
+    } else if (answer.toLowerCase() === "edit") {
+        rl.question("Enter your custom commit message: ", (customMessage) => {
+            finalMessage = customMessage;
+            commit(finalMessage);
+            rl.close();
+        });
+    } else {
+        commit(finalMessage);
+        rl.close();
+    }
+});
+
+// Function to commit with the final message
+function commit(commitMessage) {
+    runCommand(`git commit -m "${commitMessage}"`);
+    console.log(`✅ Committed with message: "${commitMessage}"`);
+}
