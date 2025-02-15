@@ -1,55 +1,89 @@
 #!/usr/bin/env node
-// Raja Nayak
+
 const { execSync } = require("child_process");
 const readline = require("readline");
 
-// Function to execute shell commands and return output
-function runCommand(command) {
+// Function to get staged files
+function getStagedFiles() {
     try {
-        return execSync(command, { encoding: "utf-8" }).trim();
+        const output = execSync("git diff --cached --name-only", { encoding: "utf-8" });
+        return output.trim().split("\n").filter(Boolean);
     } catch (error) {
-        return "";
+        console.error("Error: Unable to get staged files. Are you inside a Git repository?");
+        process.exit(1);
     }
 }
 
-// Check if there are staged changes
-const stagedChanges = runCommand("git diff --staged --name-only");
-if (!stagedChanges) {
-    console.log("No staged changes found. Please stage your changes using 'git add'.");
-    process.exit(1);
+// Function to categorize files
+function categorizeFiles(files) {
+    const fileTypes = {};
+    
+    files.forEach(file => {
+        const ext = file.split(".").pop();
+        fileTypes[ext] = (fileTypes[ext] || 0) + 1;
+    });
+    
+    return fileTypes;
 }
 
-// Generate a simple commit message based on changed files
-const files = stagedChanges.split("\n");
-const message = `Updated ${files.length} file(s): ${files.join(", ")}`;
-
-// Ask for user confirmation
-const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout
-});
-
-rl.question(`Suggested Commit Message: "${message}"\nUse this message? (Y/N/Edit): `, (answer) => {
-    let finalMessage = message;
-
-    if (answer.toLowerCase() === "n") {
-        console.log("Commit canceled.");
-        rl.close();
+// Function to generate commit message
+function generateCommitMessage(files) {
+    if (files.length === 0) {
+        console.log("No staged files to commit.");
         process.exit(0);
-    } else if (answer.toLowerCase() === "edit") {
-        rl.question("Enter your custom commit message: ", (customMessage) => {
-            finalMessage = customMessage;
-            commit(finalMessage);
-            rl.close();
-        });
-    } else {
-        commit(finalMessage);
-        rl.close();
     }
-});
 
-// Function to commit with the final message
-function commit(commitMessage) {
-    runCommand(`git commit -m "${commitMessage}"`);
-    console.log(`✅ Committed with message: "${commitMessage}"`);
+    if (files.length <= 5) {
+        return `Updated ${files.join(", ")} (Bug Fix)`;
+    } else {
+        const fileTypes = categorizeFiles(files);
+        const summary = Object.entries(fileTypes)
+            .map(([ext, count]) => `${count} ${ext.toUpperCase()} file(s)`).join(", ");
+        return `Updated ${summary} (Feature Update)`;
+    }
 }
+
+// Function to prompt user
+function promptUser(message) {
+    return new Promise(resolve => {
+        const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
+        rl.question(`${message} (Y/N/Edit): `, answer => {
+            rl.close();
+            resolve(answer.trim().toUpperCase());
+        });
+    });
+}
+
+async function main() {
+    const stagedFiles = getStagedFiles();
+    let commitMessage = generateCommitMessage(stagedFiles);
+    
+    console.log(`\nSuggested Commit Message: "${commitMessage}"`);
+    const userChoice = await promptUser("Use this message?");
+    
+    if (userChoice === "EDIT") {
+        console.log("\nEnter your custom commit message:");
+        const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
+        rl.question("> ", newMessage => {
+            commitMessage = newMessage.trim();
+            rl.close();
+            executeCommit(commitMessage);
+        });
+    } else if (userChoice === "Y") {
+        executeCommit(commitMessage);
+    } else {
+        console.log("Commit aborted.");
+    }
+}
+
+// Function to execute Git commit
+function executeCommit(message) {
+    try {
+        execSync(`git commit -m "${message}"`, { stdio: "inherit" });
+        console.log("\n✅ Commit successful!");
+    } catch (error) {
+        console.error("\n❌ Error committing files. Make sure you have staged files.");
+    }
+}
+
+main();
