@@ -1,5 +1,5 @@
 {
-  "name": "gitmate",
+  "name": "gitmate-smart-commit",
   "version": "1.0.0",
   "description": "GitMate is a powerful Git extension designed to enhance your Git workflow with intelligent automation, improved commit management, and additional productivity features.",
   "main": "index.js",
