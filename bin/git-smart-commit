@@ -22,7 +22,7 @@ function categorizeFiles(files) {
         const ext = file.split(".").pop();
         fileTypes[ext] = (fileTypes[ext] || 0) + 1;
     });
-    
+
     return fileTypes;
 }
 
