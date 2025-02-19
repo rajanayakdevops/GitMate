@@ -1,0 +1,28 @@
+{
+  "name": "git-dep-scanner",
+  "version": "1.0.0",
+  "description": "A package to scan Git repositories for dependency vulnerabilities and provide update suggestions",
+  "main": "src/index.js",
+  "type": "module",
+  "bin": {
+    "git-dep-scanner": "./src/cli.js"
+  },
+  "scripts": {
+    "start": "node src/cli.js"
+  },
+  "keywords": [
+    "git",
+    "dependencies",
+    "vulnerabilities",
+    "scanner"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "chalk": "^5.4.1",
+    "commander": "^13.1.0",
+    "npm-check-updates": "^17.1.14",
+    "simple-git": "^3.27.0",
+    "snyk": "^1.1295.3"
+  }
+}
