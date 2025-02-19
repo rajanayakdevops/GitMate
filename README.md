@@ -99,3 +99,36 @@ For any questions, suggestions, or issues, please open an issue in the [GitHub r
 
 Happy committing! 🚀
 
+
+
+# GitMate_AI 🚀  
+
+**GitMate_AI** is an AI-powered Git commit message generator leveraging Google's Gemini API. It automates commit message creation, ensuring meaningful, structured, and context-aware messages while streamlining your Git workflow.  
+
+## Features  
+
+✅ **AI-powered commit message generation** – Uses Gemini API for smart, context-aware messages.  
+✅ **Offline mode** – Generates commit messages locally without API dependency.  
+✅ **Interactive commit approval** – Accept, edit, or reject AI-generated messages.  
+✅ **Custom prompt support** – Guide the AI with personalized instructions.  
+✅ **Multi-language support** – Generates commit messages in different languages.  
+✅ **Enhanced commit history analysis** – AI learns from past commits to improve future suggestions.  
+✅ **Seamless Git integration** – Works effortlessly within Git repositories.  
+✅ **User-configurable settings** – Set preferred commit styles, tone, and message length.  
+✅ **Secure API key management** – Uses environment variables for secure API storage.  
+
+---
+
+## Installation  
+
+Install GitMate_AI globally using npm:  
+
+```sh
+npm install -g gitmate-ai
+
+**Run the command:**
+
+   ```sh
+   git smart-commit
+   ```
+
