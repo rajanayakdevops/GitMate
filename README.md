@@ -125,6 +125,6 @@ Install GitMate_AI globally using npm:
 
 ```sh
 npm install -g gitmate-ai
-git smart-commit
+git gcommit
    ```
 
