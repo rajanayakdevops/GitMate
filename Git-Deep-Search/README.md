@@ -82,4 +82,4 @@ This project is licensed under the MIT License.
 - Inspired by the need for easy-to-use security scanning tools in the Node.js ecosystem.
 
 \`\`\`
-"# GitInsight" 
+ 
